@@ -34,6 +34,15 @@ model Course {
   Lesson  Lesson[]
   order   Order[]
   goals   CourseGoals[]
+
+  Category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?   @db.ObjectId
+}
+
+model Category {
+  id     String   @id @default(auto()) @map("_id") @db.ObjectId
+  title  String   @unique
+  course Course[]
 }
 
 model CourseGoals {

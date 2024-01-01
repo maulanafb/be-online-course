@@ -4,7 +4,7 @@ import { UserService } from 'src/user/user.service';
 import { compare } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 
-const EXPIRE_TIME = 2 * 1000;
+const EXPIRE_TIME = 50 * 1000;
 
 @Injectable()
 export class AuthService {
@@ -19,6 +19,7 @@ export class AuthService {
       username: user.email,
       sub: {
         name: user.name,
+        role: user.role,
       },
     };
 
@@ -26,7 +27,7 @@ export class AuthService {
       user,
       backendTokens: {
         accessToken: await this.jwtService.signAsync(payload, {
-          expiresIn: '20s',
+          expiresIn: '50d',
           secret: process.env.jwtSecretKey,
         }),
         refreshToken: await this.jwtService.signAsync(payload, {
@@ -42,6 +43,7 @@ export class AuthService {
     const user = await this.userService.findByEmail(dto.email);
     if (user && (await compare(dto.password, user.password))) {
       const { password, ...result } = user;
+      console.log(user);
       return result;
     }
     throw new UnauthorizedException('Username / Password incorrect');
