@@ -1,0 +1,99 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  email    String  @unique
+  name     String?
+  image    String?
+  password String
+  role     String  @default("user")
+  order    Order[]
+}
+
+model Course {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  slug        String @unique
+  thumbnail   String
+  price       Int
+  level       Level  @default(BEGINNER)
+  description String
+
+  mentor  Mentor[]
+  chapter Chapter[]
+  Lesson  Lesson[]
+  order   Order[]
+  goals   CourseGoals[]
+}
+
+model CourseGoals {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  title    String
+  Course   Course? @relation(fields: [courseId], references: [id])
+  courseId String? @db.ObjectId
+}
+
+model Mentor {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  thumbnail String
+  course    Course? @relation(fields: [courseId], references: [id])
+  courseId  String? @db.ObjectId
+}
+
+model Chapter {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  title    String
+  lesson   Lesson[]
+  Course   Course?  @relation(fields: [courseId], references: [id])
+  courseId String?  @db.ObjectId
+}
+
+model Lesson {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  content   String
+  Chapter   Chapter? @relation(fields: [chapterId], references: [id])
+  chapterId String?  @db.ObjectId
+  Course    Course?  @relation(fields: [courseId], references: [id])
+  courseId  String?  @db.ObjectId
+}
+
+model Order {
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  status       String        @default("pending")
+  snap_token   String?
+  metadata     Json
+  payment_logs PaymentLogs[]
+
+  Course   Course? @relation(fields: [courseId], references: [id])
+  courseId String? @db.ObjectId
+  User     User?   @relation(fields: [userId], references: [id])
+  userId   String? @db.ObjectId
+}
+
+model PaymentLogs {
+  id           String  @id @default(auto()) @map("_id") @db.ObjectId
+  status       String?
+  payment_type String?
+  raw_response Json?
+
+  Order   Order?  @relation(fields: [orderId], references: [id])
+  orderId String? @db.ObjectId
+}
+
+enum Level {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCE
+}
