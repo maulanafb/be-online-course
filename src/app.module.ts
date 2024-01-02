@@ -13,6 +13,7 @@ import { diskStorage } from 'multer';
 import { extname, join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { CourseGoalsModule } from './course-goals/course-goals.module';
+import { ChapterModule } from './chapter/chapter.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { CourseGoalsModule } from './course-goals/course-goals.module';
     MentorModule,
     OrderModule,
     CourseGoalsModule,
+    ChapterModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

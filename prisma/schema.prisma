@@ -29,17 +29,13 @@ model Course {
   level       Level  @default(BEGINNER)
   description String
 
-  order Order[]
-
+  order       Order[]
   courseGoals CourseGoals[]
-
-  chapter Chapter[]
+  chapter     Chapter[]
 
   mentor   Mentor? @relation(fields: [mentorId], references: [id])
   mentorId String? @db.ObjectId
 
-  lesson     Lesson?   @relation(fields: [lessonId], references: [id], onUpdate: NoAction, onDelete: NoAction)
-  lessonId   String?   @db.ObjectId
   category   Category? @relation(fields: [categoryId], references: [id])
   categoryId String?   @db.ObjectId
 }
@@ -70,18 +66,17 @@ model Chapter {
   title  String
   lesson Lesson[]
 
-  course   Course? @relation(fields: [courseId], references: [id], onUpdate: NoAction, onDelete: NoAction)
+  course   Course? @relation(fields: [courseId], references: [id])
   courseId String? @db.ObjectId
 }
 
 model Lesson {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  title     String
-  content   String
-  chapter   Chapter? @relation(fields: [chapterId], references: [id], onUpdate: NoAction, onDelete: NoAction)
-  chapterId String?  @db.ObjectId
-
-  Course Course[]
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  title      String
+  content    String
+  mentorNote String?
+  chapter    Chapter? @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  chapterId  String?  @db.ObjectId
 }
 
 model Order {
