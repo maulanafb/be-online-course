@@ -55,9 +55,8 @@ export class MentorController {
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
-        destination: 'public/upload',
+        destination: 'public/uploads/mentor',
         filename: (req, file, cb) => {
-          // Generating a 32 random chars long string
           const randomName = Array(32)
             .fill(null)
             .map(() => Math.round(Math.random() * 16).toString(16))

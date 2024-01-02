@@ -62,6 +62,7 @@ export class MentorService {
     if (!existingMentor) {
       throw new NotFoundException(`Mentor with ID ${id} not found`);
     }
+
     if (existingMentor.thumbnail) {
       const oldThumbnailPath = `public/uploads/mentor/${existingMentor.thumbnail}`;
       if (fs.existsSync(oldThumbnailPath)) {
@@ -69,12 +70,11 @@ export class MentorService {
       }
     }
     let updatedThumbnail = existingMentor.thumbnail;
-
-    // Check if a new thumbnail is provided
+    // console.log(updatedThumbnail);
     if (thumbnail) {
       updatedThumbnail = thumbnail.filename;
     }
-    console.log(updateMentorDto);
+    // console.log(updateMentorDto);
     const updatedMentor = await this.prismaService.mentor.update({
       where: { id },
       data: {
