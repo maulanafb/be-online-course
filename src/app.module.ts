@@ -12,6 +12,7 @@ import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname, join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { CourseGoalsModule } from './course-goals/course-goals.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
     CourseModule,
     MentorModule,
     OrderModule,
+    CourseGoalsModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
