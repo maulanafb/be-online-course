@@ -63,7 +63,7 @@ export class CourseController {
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
-        destination: 'public/upload',
+        destination: 'public/uploads/course',
         filename: (req, file, cb) => {
           // Generating a 32 random chars long string
           const randomName = Array(32)

@@ -63,7 +63,7 @@ export class MentorService {
       throw new NotFoundException(`Mentor with ID ${id} not found`);
     }
     if (existingMentor.thumbnail) {
-      const oldThumbnailPath = `public/upload/${existingMentor.thumbnail}`;
+      const oldThumbnailPath = `public/uploads/mentor/${existingMentor.thumbnail}`;
       if (fs.existsSync(oldThumbnailPath)) {
         fs.unlinkSync(oldThumbnailPath);
       }
