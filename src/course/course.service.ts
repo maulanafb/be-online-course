@@ -1,9 +1,4 @@
-import {
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-  Delete,
-} from '@nestjs/common';
+import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { PrismaService } from 'src/prisma.service';
@@ -13,21 +8,19 @@ export class CourseService {
   constructor(private prismaService: PrismaService) {}
 
   async create(createCourseDto: CreateCourseDto) {
-    const course = await this.prismaService.course.create({
+    const createCourse = await this.prismaService.course.create({
       data: createCourseDto,
     });
-
     return {
-      data: course,
+      data: createCourse,
       statusCode: HttpStatus.CREATED,
       message: 'Course created successfully',
     };
   }
-
   async findAll() {
     const allCourse = await this.prismaService.course.findMany({
       include: {
-        Category: {
+        category: {
           select: {
             title: true,
           },
@@ -45,7 +38,7 @@ export class CourseService {
         id: id,
       },
       include: {
-        Category: {
+        category: {
           select: {
             title: true,
           },

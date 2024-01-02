@@ -29,13 +29,18 @@ model Course {
   level       Level  @default(BEGINNER)
   description String
 
-  mentor  Mentor[]
-  chapter Chapter[]
-  Lesson  Lesson[]
-  order   Order[]
-  goals   CourseGoals[]
+  order Order[]
 
-  Category   Category? @relation(fields: [categoryId], references: [id])
+  courseGoals CourseGoals[]
+
+  chapter Chapter[]
+
+  mentor   Mentor? @relation(fields: [mentorId], references: [id])
+  mentorId String? @db.ObjectId
+
+  lesson     Lesson?   @relation(fields: [lessonId], references: [id], onUpdate: NoAction, onDelete: NoAction)
+  lessonId   String?   @db.ObjectId
+  category   Category? @relation(fields: [categoryId], references: [id])
   categoryId String?   @db.ObjectId
 }
 
@@ -46,36 +51,37 @@ model Category {
 }
 
 model CourseGoals {
-  id       String  @id @default(auto()) @map("_id") @db.ObjectId
-  title    String
-  Course   Course? @relation(fields: [courseId], references: [id])
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  title String
+
+  course   Course? @relation(fields: [courseId], references: [id])
   courseId String? @db.ObjectId
 }
 
 model Mentor {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String
   thumbnail String
-  course    Course? @relation(fields: [courseId], references: [id])
-  courseId  String? @db.ObjectId
+  course    Course[]
 }
 
 model Chapter {
-  id       String   @id @default(auto()) @map("_id") @db.ObjectId
-  title    String
-  lesson   Lesson[]
-  Course   Course?  @relation(fields: [courseId], references: [id])
-  courseId String?  @db.ObjectId
+  id     String   @id @default(auto()) @map("_id") @db.ObjectId
+  title  String
+  lesson Lesson[]
+
+  course   Course? @relation(fields: [courseId], references: [id], onUpdate: NoAction, onDelete: NoAction)
+  courseId String? @db.ObjectId
 }
 
 model Lesson {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   title     String
   content   String
-  Chapter   Chapter? @relation(fields: [chapterId], references: [id])
+  chapter   Chapter? @relation(fields: [chapterId], references: [id], onUpdate: NoAction, onDelete: NoAction)
   chapterId String?  @db.ObjectId
-  Course    Course?  @relation(fields: [courseId], references: [id])
-  courseId  String?  @db.ObjectId
+
+  Course Course[]
 }
 
 model Order {

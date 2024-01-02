@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsMongoId,
+  IsNotEmpty,
+  IsObject,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateCourseDto {
   @IsString()
@@ -16,8 +22,20 @@ export class CreateCourseDto {
   @IsOptional()
   @IsString()
   Level: string;
+
   @IsString()
   description: string;
-  @IsString()
+
+  @IsObject()
   categoryId: string;
+
+  @IsOptional()
+  @IsString()
+  @IsMongoId()
+  mentorId: string;
+
+  @IsOptional()
+  @IsString()
+  @IsMongoId()
+  lessonId: string;
 }
