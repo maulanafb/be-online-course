@@ -2,15 +2,23 @@ import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { PrismaService } from 'src/prisma.service';
+import slugify from 'slugify';
+import * as fs from 'fs';
 
 @Injectable()
 export class CourseService {
   constructor(private prismaService: PrismaService) {}
 
-  async create(createCourseDto: CreateCourseDto) {
+  async create(createCourseDto: CreateCourseDto, thumbnail: any) {
+    const slug = slugify(createCourseDto.name, { lower: true });
     const createCourse = await this.prismaService.course.create({
-      data: createCourseDto,
+      data: {
+        ...createCourseDto,
+        thumbnail: thumbnail ? thumbnail.filename : null,
+        slug: slug,
+      },
     });
+    console.log(createCourse);
     return {
       data: createCourse,
       statusCode: HttpStatus.CREATED,
@@ -55,12 +63,30 @@ export class CourseService {
     };
   }
 
-  async update(id: string, updateCourseDto: UpdateCourseDto) {
+  async update(id: string, updateCourseDto: UpdateCourseDto, thumbnail: any) {
+    const existingCourse = await this.prismaService.course.findUnique({
+      where: { id },
+    });
+
+    if (!existingCourse) {
+      throw new NotFoundException(`Mentor with ID ${id} not found`);
+    }
+    if (existingCourse.thumbnail) {
+      const oldThumbnailPath = `public/upload/${existingCourse.thumbnail}`;
+      if (fs.existsSync(oldThumbnailPath)) {
+        fs.unlinkSync(oldThumbnailPath);
+      }
+    }
+    let updatedThumbnail = existingCourse.thumbnail;
+    // Check if a new thumbnail is provided
+    if (thumbnail) {
+      updatedThumbnail = thumbnail.filename;
+    }
     const updateCourse = await this.prismaService.course.update({
       where: {
         id: id,
       },
-      data: updateCourseDto,
+      data: { ...updateCourseDto, thumbnail: updatedThumbnail },
     });
 
     if (!updateCourse) throw new NotFoundException();

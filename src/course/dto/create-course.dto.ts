@@ -1,6 +1,7 @@
 import {
   IsMongoId,
   IsNotEmpty,
+  IsNumberString,
   IsObject,
   IsOptional,
   IsString,
@@ -10,11 +11,11 @@ export class CreateCourseDto {
   @IsString()
   name: string;
 
-  @IsString()
-  slug: string;
+  // @IsString()
+  // slug: string;
 
-  @IsString()
-  thumbnail: string;
+  // @IsString()
+  // thumbnail: string;
 
   @IsNotEmpty()
   price: number;
@@ -26,7 +27,7 @@ export class CreateCourseDto {
   @IsString()
   description: string;
 
-  @IsObject()
+  @IsString()
   categoryId: string;
 
   @IsOptional()

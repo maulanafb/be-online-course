@@ -8,9 +8,24 @@ import { CategoryModule } from './category/category.module';
 import { CourseModule } from './course/course.module';
 import { MentorModule } from './mentor/mentor.module';
 import { OrderModule } from './order/order.module';
+import { MulterModule } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname, join } from 'path';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 @Module({
-  imports: [UserModule, AuthModule, CategoryModule, CourseModule, MentorModule, OrderModule],
+  imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+    }),
+
+    UserModule,
+    AuthModule,
+    CategoryModule,
+    CourseModule,
+    MentorModule,
+    OrderModule,
+  ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })
