@@ -8,19 +8,19 @@ import { CategoryModule } from './category/category.module';
 import { CourseModule } from './course/course.module';
 import { MentorModule } from './mentor/mentor.module';
 import { OrderModule } from './order/order.module';
-import { MulterModule } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname, join } from 'path';
+import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { CourseGoalsModule } from './course-goals/course-goals.module';
 import { ChapterModule } from './chapter/chapter.module';
-
+import { ConfigModule } from '@nestjs/config';
+import { GoogleStrategy } from './auth/guards/google.strategy';
+import { LessonModule } from './lesson/lesson.module';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
     }),
-
+    ConfigModule.forRoot(),
     UserModule,
     AuthModule,
     CategoryModule,
@@ -29,8 +29,9 @@ import { ChapterModule } from './chapter/chapter.module';
     OrderModule,
     CourseGoalsModule,
     ChapterModule,
+    LessonModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService],
+  providers: [AppService, PrismaService, GoogleStrategy],
 })
 export class AppModule {}
